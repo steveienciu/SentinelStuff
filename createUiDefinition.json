@@ -6,7 +6,6 @@
         "config": {
             "isWizard": false,
             "basics": {
-                "description": "",
                 "location": {
                     "label": "Location",
                     "toolTip": "Location for all resources",
@@ -21,8 +20,7 @@
                 "name": "rgName",
                 "type": "Microsoft.Common.TextBox",
                 "label": "Resource Group name",
-                "placeholder": "",
-                "defaultValue": "",
+		"defaultValue": "",
                 "toolTip": "Enter a resource group name",
                 "constraints": {
                     "required": true,
@@ -35,7 +33,6 @@
                 "name": "workspaceName",
                 "type": "Microsoft.Common.TextBox",
                 "label": "Workspace Name",
-                "placeholder": "",
                 "defaultValue": "",
                 "toolTip": "The Workspace name should include 4-63 letters, digits or '-'. The '-' shouldn't be the first or the last symbol.",
                 "constraints": {
@@ -49,7 +46,6 @@
                 "name": "dataRetention",
                 "type": "Microsoft.Common.TextBox",
                 "label": "Number of days of retention",
-                "placeholder": "",
                 "defaultValue": "90",
                 "toolTip": "Only numbers allowed",
                 "constraints": {
@@ -94,7 +90,7 @@
                       "constraints": {
                           "allowedValues": [
                               {
-                                  "label": "Microsoft Entra ID",
+                                  "label": "Azure Active Directory",
                                   "value": "AzureActiveDirectory"
                               },
                               {
@@ -137,7 +133,6 @@
                       "name": "enableSolutions1P",
                       "type": "Microsoft.Common.DropDown",
                       "label": "Select Microsoft Content Hub solutions to install",
-                      "placeholder": "",
                       "multiselect": true,
                       "filter": true,
                       "filterPlaceholder": "Filter items ...",
@@ -147,7 +142,7 @@
                       "constraints": {
                           "allowedValues": [
                               {
-                                  "label": "Microsoft Entra ID",
+                                  "label": "Azure Active Directory",
                                   "description": "The Azure Active Directory solution for Microsoft Sentinel enables you to ingest Azure Active Directory Audit,Sign-in,Provisioning,Risk Events and Risky User/Service Principal logs using Diagnostic Settings into Microsoft Sentinel.",
                                   "value": "Azure Active Directory"
                               },
@@ -201,7 +196,6 @@
                       "name": "enableDataConnectors",
                       "type": "Microsoft.Common.DropDown",
                       "label": "Select data connectors to onboard",
-                      "placeholder": "",
                       "multiselect": true,
                       "filter": true,
                       "filterPlaceholder": "Filter items ...",
@@ -211,10 +205,15 @@
                       "constraints": {
                           "allowedValues": [
                             {
-                                "label": "Microsoft Entra ID",
+                                "label": "Azure Active Directory",
                                 "description": "Relevant license and Global Admin or Security Admin permission required.",
                                 "value": "AzureActiveDirectory"
                             },  
+                            {
+                                "label": "Azure Active Directory Identity Protection",
+                                "description": "Relevant license and Global Admin or Security Admin permission required.",
+                                "value": "AzureActiveDirectoryIDP"
+                            },
                             {
                                 "label": "Azure Activity",
                                 "description": "This will only bring logs from the subscription selected in Basics tab. Relevant permissions at the subscription level are required.",
@@ -248,11 +247,10 @@
                   {
                     "name": "aadStreams",
                       "type": "Microsoft.Common.DropDown",
-                      "label": "Select Microsoft Entra ID log types to enable",
-                      "placeholder": "",
+                      "label": "Select Azure Active Directory log types to enable",
                       "multiselect": true,
                       "defaultValue": [{"value": "SignInLogs"}, {"value": "AuditLogs"}],
-                      "toolTip": "Select Microsoft Entra ID log types you would like to stream to the workspace",
+                      "toolTip": "Select Azure Active Directory log types you would like to stream to the workspace",
                       "constraints": {
                           "allowedValues": [
                               {
@@ -302,23 +300,109 @@
                               {
                                   "label": "Service Principal Risk Events (Preview)",
                                   "value": "ServicePrincipalRiskEvents"
-                              },
-                              {
-                                  "label": "Microsoft Graph Activity Logs (Preview)",
-                                  "value": "MicrosoftGraphActivityLogs"
-                              },
-                              {
-                                  "label": "Enriched Office365 Audit Logs (Preview)",
-                                  "value": "EnrichedOffice365AuditLogs"
-                              },
-                              {
-                                  "label": "Remote Network Health Logs (Preview)",
-                                  "value": "RemoteNetworkHealthLogs"
                               }
                           ],
                           "required": false
                       },
                       "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'AzureActiveDirectory'),true,false)]"
+                  },
+                  {
+                    "name": "xdrStreams",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "Select Microsoft Defender XDR raw logging options to enable",
+                    "multiselect": true,
+                    "defaultValue": [{"value": "alerts"}, {"value": "alertInfo"}, {"value": "alertEvidence"}],
+                    "toolTip": "Select Microsoft Defender XDR raw logging options you would like to stream to the workspace",
+                    "constraints": {
+                        "allowedValues": [
+                            {
+                                "label": "Alerts",
+                                "value": "alerts"
+                            },
+                            {
+                                "label": "Alert Info",
+                                "value": "alertInfo"
+                            },
+                            {
+                                "label": "Alert Evidence",
+                                "value": "alertEvidence"
+                            },
+                            {
+                                "label": "Device Events",
+                                "value": "deviceEvents"
+                            },
+                            {
+                                "label": "Device Info",
+                                "value": "deviceInfo"
+                            },
+                            {
+                                "label": "Device Network Info",
+                                "value": "deviceNetworkInfo"
+                            },
+                            {
+                                "label": "Device Process Events",
+                                "value": "deviceProcessEvents"
+                            },
+                            {
+                                "label": "Device Network Events",
+                                "value": "deviceNetworkEvents"
+                            },
+                            {
+                                "label": "Device File Events",
+                                "value": "deviceFileEvents"
+                            },
+                            {
+                                "label": "Device Registry Events",
+                                "value": "deviceRegistryEvents"
+                            },
+                            {
+                                "label": "Device Logon Events",
+                                "value": "deviceLogonEvents"
+                            },
+                            {
+                                "label": "Device Image Load Events",
+                                "value": "deviceImageLoadEvents"
+                            },
+                            {
+                                "label": "Device File Certificate Info",
+                                "value": "deviceFileCertificateInfo"
+                            },
+                            {
+                                "label": "Email Events",
+                                "value": "emailEvents"
+                            },
+                            {
+                                "label": "Email URL Info",
+                                "value": "emailUrlInfo"
+                            },
+                            {
+                                "label": "Email Attachment Info",
+                                "value": "emailAttachmentInfo"
+                            },
+                            {
+                                "label": "Email Post Delivery Events",
+                                "value": "emailPostDeliveryEvents"
+                            },
+                            {
+                                "label": "Identity Directory Events",
+                                "value": "identityDirectoryEvents"
+                            },
+                            {
+                                "label": "Identity Logon Events",
+                                "value": "identityLogonEvents"
+                            },
+                            {
+                                "label": "Identity Query Events",
+                                "value": "identityQueryEvents"
+                            },
+                            {
+                                "label": "Cloud App Events",
+                                "value": "cloudAppEvents"
+                            }
+                        ],
+                        "required": false
+                    },
+                    "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'Microsoft365XDR'),true,false)]"
                   }
               ]
           }
@@ -332,6 +416,7 @@
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
+            "xdrStreams": "[steps('dataConnectors').xdrStreams]",
             "location": "[location()]",
             "rgName": "[basics('rgName')]"
         }
