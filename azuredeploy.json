@@ -2,6 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+	"_artifactsLocationSasToken": {
+	    "type": "securestring",
+            "defaultValue": ""
+        },
         "rgName": {
             "type": "string"
         },
@@ -58,6 +62,13 @@
             },
             "defaultValue": []
         },
+        "xdrStreams": {
+            "type": "array",
+            "metadata": {
+                "description": "The list of data types to enable for Microsoft Defender XDR connector"
+            },
+            "defaultValue": []
+        },
         "enableUeba": {
             "type": "bool",
             "metadata": {
@@ -88,7 +99,7 @@
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01", 
+            "apiVersion": "2022-09-01", 
             "name": "lighthouseDeployment",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -154,7 +165,7 @@
         {
             "name": "workspaceCreation",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2023-07-01",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/resourceGroups',parameters('rgName'))]"
             ],
@@ -162,7 +173,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), 'LinkedTemplates/workspace.json')]",
+                    "uri": "[uri(parameters('_artifactsLocation'), 'LinkedTemplates/workspace.json'), parameters('_artifactsLocationSasToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -184,7 +195,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "name": "settings",
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2023-07-01",
             "dependsOn": [
                 "workspaceCreation"
             ],
@@ -215,7 +226,7 @@
             "condition": "[not(empty(parameters('enableDataConnectors')))]",
             "name": "enableDataConnectors",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2023-07-01",
             "resourceGroup": "[parameters('rgName')]",
             "dependsOn": [
                 "workspaceCreation",
@@ -234,6 +245,9 @@
                     "aadStreams": {
                         "value": "[parameters('aadStreams')]"
                     },
+                    "xdrStreams": {
+                        "value": "[parameters('xdrStreams')]"
+                    },
                     "workspaceName": {
                         "value": "[parameters('workspaceName')]"
                     },
@@ -250,10 +264,10 @@
             }
         },
         {
-            "condition": "[not(empty(parameters('enableSolutions1P')))]",
+            "condition": "[or(not(empty(parameters('enableSolutions1P'))),not(empty(parameters('enableSolutionsEssentials'))),not(empty(parameters('enableSolutionsTraining'))))]",
             "name": "enableSolutionsAndAlerts",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2023-07-01",
             "resourceGroup": "[parameters('rgName')]",
             "dependsOn": [
                 "workspaceCreation",
@@ -268,6 +282,12 @@
                 "parameters": {
                     "enableSolutions1P": {
                         "value": "[replace(replace(string(parameters('enableSolutions1P')),'[',''),']','')]"
+                    },
+                    "enableSolutionsEssentials": {
+                        "value": "[replace(replace(string(parameters('enableSolutionsEssentials')),'[',''),']','')]"
+                    },
+                    "enableSolutionsTraining": {
+                        "value": "[replace(replace(string(parameters('enableSolutionsTraining')),'[',''),']','')]"
                     },
                     "workspaceName": {
                         "value": "[parameters('workspaceName')]"
