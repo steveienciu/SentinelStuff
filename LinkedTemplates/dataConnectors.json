@@ -16,6 +16,13 @@
             },
             "defaultValue": []
         },
+        "xdrStreams": {
+            "type": "array",
+            "metadata": {
+                "description": "The list of data types to enable for Microsoft Defender XDR connector"
+            },
+            "defaultValue": []
+        },
         "workspaceName": {
             "type": "string",
             "metadata": {
@@ -187,67 +194,67 @@
                 "tenantId": "[parameters('tenantId')]",
                 "dataTypes": {
                     "alerts": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'alerts'), 'enabled', 'disabled')]"
                     },
                     "alertInfo": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'alertInfo'), 'enabled', 'disabled')]"
                     },
                     "alertEvidence": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'alertEvidence'), 'enabled', 'disabled')]"
                     },
                     "deviceEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceEvents'), 'enabled', 'disabled')]"
                     },
                     "deviceInfo": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceInfo'), 'enabled', 'disabled')]"
                     },
                     "deviceNetworkInfo": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceNetworkInfo'), 'enabled', 'disabled')]"
                     },
                     "deviceProcessEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceProcessEvents'), 'enabled', 'disabled')]"
                     },
                     "deviceNetworkEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceNetworkEvents'), 'enabled', 'disabled')]"
                     },
                     "deviceFileEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceFileEvents'), 'enabled', 'disabled')]"
                     },
                     "deviceRegistryEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceRegistryEvents'), 'enabled', 'disabled')]"
                     },
                     "deviceLogonEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceLogonEvents'), 'enabled', 'disabled')]"
                     },
                     "deviceImageLoadEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceImageLoadEvents'), 'enabled', 'disabled')]"
                     },
                     "deviceFileCertificateInfo": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'deviceFileCertificateInfo'), 'enabled', 'disabled')]"
                     },
                     "emailEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'emailEvents'), 'enabled', 'disabled')]"
                     },
                     "emailUrlInfo": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'emailUrlInfo'), 'enabled', 'disabled')]"
                     },
                     "emailAttachmentInfo": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'emailAttachmentInfo'), 'enabled', 'disabled')]"
                     },
                     "emailPostDeliveryEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'emailPostDeliveryEvents'), 'enabled', 'disabled')]"
                     },
                     "identityDirectoryEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'identityDirectoryEvents'), 'enabled', 'disabled')]"
                     },
                     "identityLogonEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'identityLogonEvents'), 'enabled', 'disabled')]"
                     },
                     "identityQueryEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'identityQueryEvents'), 'enabled', 'disabled')]"
                     },
                     "cloudAppEvents": {
-                        "state": "enabled"
+                        "state": "[if(contains(parameters('xdrStreams'), 'cloudAppEvents'), 'enabled', 'disabled')]"
                     }
                 }
             }
