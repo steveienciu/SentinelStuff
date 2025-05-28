@@ -25,7 +25,7 @@
         "tenantId": {
             "type": "string",
             "metadata": {
-                "description": "Microsoft Entra ID tenant ID"
+                "description": "Azure AD tenant ID"
             }
         },
         "subscriptionId": {
@@ -46,9 +46,9 @@
     "variables": {
         "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]",
         "xdrName": "[concat('xdr', uniqueString(resourceGroup().id))]",
-        "mdcName": "[concat('mdc', uniqueString(resourceGroup().id))]",
-        "tiName": "[concat('msti', uniqueString(resourceGroup().id))]",
-        "ascName": "[concat('asc', uniqueString(resourceGroup().id))]"
+        "ascName": "[concat('asc', uniqueString(resourceGroup().id))]",
+        "aadipName": "[concat('aadip', uniqueString(resourceGroup().id))]",
+        "tiName": "[concat('ti', uniqueString(resourceGroup().id))]"
     },
     "resources": [
          {
@@ -56,7 +56,7 @@
             "type": "microsoft.aadiam/diagnosticSettings",
             "apiVersion": "2017-04-01",
             "scope": "/",
-            "name": "[format('{0}-entraidDiagnosticSetttings', parameters('workspaceName'))]",
+            "name": "[format('{0}-aadDiagnosticSetttings', parameters('workspaceName'))]",
             "properties": {
             "logs": [
                 {
@@ -106,18 +106,6 @@
                 {
                     "category": "ServicePrincipalRiskEvents",
                     "enabled": "[contains(parameters('aadStreams'),'ServicePrincipalRiskEvents')]"
-                },
-                {
-                    "category": "MicrosoftGraphActivityLogs",
-                    "enabled": "[contains(parameters('aadStreams'),'MicrosoftGraphActivityLogs')]"
-                },
-                {
-                    "category": "EnrichedOffice365AuditLogs",
-                    "enabled": "[contains(parameters('aadStreams'),'EnrichedOffice365AuditLogs')]"
-                },
-                {
-                    "category": "RemoteNetworkHealthLogs",
-                    "enabled": "[contains(parameters('aadStreams'),'RemoteNetworkHealthLogs')]"
                 }
             ],
             "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
@@ -146,6 +134,49 @@
             }
         },
         {
+            "condition": "[contains(parameters('dataConnectorsKind'), 'AzureActiveDirectoryIDP')]",
+            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+            "apiVersion": "2020-01-01",
+            "location": "[parameters('location')]",
+            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('aadipName'))]",
+            "kind": "AzureActiveDirectory",
+            "properties": {
+                "tenantId": "[parameters('tenantId')]",
+                "dataTypes": {
+                    "alerts": {
+                        "state": "enabled"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[contains(parameters('dataConnectorsKind'), 'AzureActivity')]",
+            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
+            "apiVersion": "2020-03-01-preview",
+            "location": "[parameters('location')]",
+            "name": "[concat(parameters('workspaceName'), '/', replace(parameters('subscriptionId'),'-', ''))]",
+            "kind": "AzureActivityLog",
+            "properties": {
+                "linkedResourceId": "[subscriptionResourceId('microsoft.insights/eventtypes', 'management')]"
+            }
+        },
+        {
+            "condition": "[contains(parameters('dataConnectorsKind'), 'MicrosoftDefenderForCloud')]",
+            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+            "apiVersion": "2020-01-01",
+            "location": "[parameters('location')]",
+            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('ascName'))]",
+            "kind": "AzureSecurityCenter",
+            "properties": {
+                "subscriptionId": "[parameters('subscriptionId')]",
+                "dataTypes": {
+                    "alerts": {
+                        "state": "enabled"
+                    }
+                }
+            }
+        },
+        {
             "condition": "[contains(parameters('dataConnectorsKind'), 'Microsoft365XDR')]",
             "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
             "apiVersion": "2022-12-01-preview",
@@ -155,7 +186,67 @@
             "properties": {
                 "tenantId": "[parameters('tenantId')]",
                 "dataTypes": {
-                    "incidents": {
+                    "alerts": {
+                        "state": "enabled"
+                    },
+                    "alertInfo": {
+                        "state": "enabled"
+                    },
+                    "alertEvidence": {
+                        "state": "enabled"
+                    },
+                    "deviceEvents": {
+                        "state": "enabled"
+                    },
+                    "deviceInfo": {
+                        "state": "enabled"
+                    },
+                    "deviceNetworkInfo": {
+                        "state": "enabled"
+                    },
+                    "deviceProcessEvents": {
+                        "state": "enabled"
+                    },
+                    "deviceNetworkEvents": {
+                        "state": "enabled"
+                    },
+                    "deviceFileEvents": {
+                        "state": "enabled"
+                    },
+                    "deviceRegistryEvents": {
+                        "state": "enabled"
+                    },
+                    "deviceLogonEvents": {
+                        "state": "enabled"
+                    },
+                    "deviceImageLoadEvents": {
+                        "state": "enabled"
+                    },
+                    "deviceFileCertificateInfo": {
+                        "state": "enabled"
+                    },
+                    "emailEvents": {
+                        "state": "enabled"
+                    },
+                    "emailUrlInfo": {
+                        "state": "enabled"
+                    },
+                    "emailAttachmentInfo": {
+                        "state": "enabled"
+                    },
+                    "emailPostDeliveryEvents": {
+                        "state": "enabled"
+                    },
+                    "identityDirectoryEvents": {
+                        "state": "enabled"
+                    },
+                    "identityLogonEvents": {
+                        "state": "enabled"
+                    },
+                    "identityQueryEvents": {
+                        "state": "enabled"
+                    },
+                    "cloudAppEvents": {
                         "state": "enabled"
                     }
                 }
@@ -164,16 +255,15 @@
         {
             "condition": "[contains(parameters('dataConnectorsKind'), 'ThreatIntelligence')]",
             "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2024-04-01-preview",
+            "apiVersion": "2020-01-01",
             "location": "[parameters('location')]",
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('tiName'))]",
-            "kind": "MicrosoftThreatIntelligence",
+            "kind": "ThreatIntelligence",
             "properties": {
                 "tenantId": "[parameters('tenantId')]",
                 "dataTypes": {
-                    "microsoftEmergingThreatFeed": {
-                        "state": "enabled",
-                        "lookbackPeriod": "1970-01-01T00:00:00Z"
+                    "indicators": {
+                        "state": "enabled"
                     }
                 }
             }
