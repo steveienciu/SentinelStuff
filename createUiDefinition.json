@@ -384,6 +384,10 @@
                                 "value": "emailPostDeliveryEvents"
                             },
                             {
+                                "label": "URL Click Events",
+                                "value": "urlClickEvents"
+                            },
+                            {
                                 "label": "Identity Directory Events",
                                 "value": "identityDirectoryEvents"
                             },
@@ -398,10 +402,6 @@
                             {
                                 "label": "Cloud App Events",
                                 "value": "cloudAppEvents"
-                            },
-                            {
-                                "label": "URL Click Events",
-                                "value": "urlClickEvents"
                             }
                         ],
                         "required": false
