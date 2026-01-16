@@ -255,6 +255,9 @@
                     },
                     "cloudAppEvents": {
                         "state": "[if(contains(parameters('xdrStreams'), 'cloudAppEvents'), 'enabled', 'disabled')]"
+                    },
+                    "urlClickEvents": {
+                        "state": "[if(contains(parameters('xdrStreams'), 'urlClickEvents'), 'enabled', 'disabled')]"
                     }
                 }
             }
