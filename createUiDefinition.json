@@ -144,7 +144,7 @@
                               {
                                   "label": "Microsoft Entra ID",
                                   "description": "The Microsoft Entra ID solution for Microsoft Sentinel enables you to ingest Microsoft Entra ID Audit,Sign-in,Provisioning,Risk Events and Risky User/Service Principal logs using Diagnostic Settings into Microsoft Sentinel.",
-                                  "value": "AzureActiveDirectory"
+                                  "value": "Microsoft Entra ID"
                               },
                               {
                                   "label": "Azure Activity",
@@ -169,7 +169,7 @@
                               {
                                   "label": "Threat Intelligence (NEW)",
                                   "description": "Ingest threat indicators into Microsoft Sentinel. Threat indicators can be IP addresses, domains, URLs and file hashes and can be used to correlate across log sources for known indicators of compromise and/or indicators of active attack",
-                                  "value": "ThreatIntelligence"
+                                  "value": "Threat Intelligence"
                               }
                           ],
                           "required": false
