@@ -62,13 +62,6 @@
             },
             "defaultValue": []
         },
-        "xdrStreams": {
-            "type": "array",
-            "metadata": {
-                "description": "The list of data types to enable for Microsoft Defender XDR connector"
-            },
-            "defaultValue": []
-        },
         "enableUeba": {
             "type": "bool",
             "metadata": {
@@ -244,9 +237,6 @@
                     },
                     "aadStreams": {
                         "value": "[parameters('aadStreams')]"
-                    },
-                    "xdrStreams": {
-                        "value": "[parameters('xdrStreams')]"
                     },
                     "workspaceName": {
                         "value": "[parameters('workspaceName')]"
