@@ -54,7 +54,6 @@
         "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]",
         "xdrName": "[concat('xdr', uniqueString(resourceGroup().id))]",
         "ascName": "[concat('asc', uniqueString(resourceGroup().id))]",
-        "aadipName": "[concat('aadip', uniqueString(resourceGroup().id))]",
         "tiName": "[concat('ti', uniqueString(resourceGroup().id))]"
     },
     "resources": [
@@ -141,33 +140,6 @@
             }
         },
         {
-            "condition": "[contains(parameters('dataConnectorsKind'), 'AzureActiveDirectoryIDP')]",
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2020-01-01",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('aadipName'))]",
-            "kind": "AzureActiveDirectory",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "alerts": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[contains(parameters('dataConnectorsKind'), 'AzureActivity')]",
-            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
-            "apiVersion": "2020-03-01-preview",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'), '/', replace(parameters('subscriptionId'),'-', ''))]",
-            "kind": "AzureActivityLog",
-            "properties": {
-                "linkedResourceId": "[subscriptionResourceId('microsoft.insights/eventtypes', 'management')]"
-            }
-        },
-        {
             "condition": "[contains(parameters('dataConnectorsKind'), 'MicrosoftDefenderForCloud')]",
             "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
             "apiVersion": "2020-01-01",
@@ -193,71 +165,74 @@
             "properties": {
                 "tenantId": "[parameters('tenantId')]",
                 "dataTypes": {
+                    "incidents": {
+                        "state": "disabled"
+                    },
                     "alerts": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'alerts'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "alertInfo": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'alertInfo'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "alertEvidence": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'alertEvidence'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceInfo": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceInfo'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceNetworkInfo": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceNetworkInfo'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceProcessEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceProcessEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceNetworkEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceNetworkEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceFileEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceFileEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceRegistryEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceRegistryEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceLogonEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceLogonEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceImageLoadEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceImageLoadEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "deviceFileCertificateInfo": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'deviceFileCertificateInfo'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "emailEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'emailEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "emailUrlInfo": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'emailUrlInfo'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "emailAttachmentInfo": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'emailAttachmentInfo'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "emailPostDeliveryEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'emailPostDeliveryEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "identityDirectoryEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'identityDirectoryEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "identityLogonEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'identityLogonEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "identityQueryEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'identityQueryEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "cloudAppEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'cloudAppEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     },
                     "urlClickEvents": {
-                        "state": "[if(contains(parameters('xdrStreams'), 'urlClickEvents'), 'enabled', 'disabled')]"
+                        "state": "disabled"
                     }
                 }
             }
