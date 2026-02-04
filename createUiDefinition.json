@@ -205,7 +205,7 @@
                       "constraints": {
                           "allowedValues": [
                             {
-                                "label": "Azure Active Directory",
+                                "label": "Microsoft Entra ID",
                                 "description": "Relevant license and Global Admin or Security Admin permission required.",
                                 "value": "AzureActiveDirectory"
                             },
@@ -220,7 +220,7 @@
                                 "value": "Office365"
                             },
                             {
-                                "label": "Threat Intelligence Platforms",
+                                "label": "Threat Intelligence (NEW)",
                                 "description": "Global Admin or Security Admin permission required",
                                 "value": "ThreatIntelligence"
                             }
