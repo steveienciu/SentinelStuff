@@ -55,6 +55,20 @@
             },
             "defaultValue": []
         },
+        "enableSolutionsEssentials": {
+            "type": "array",
+            "metadata": {
+                "description": "The list of Content Hub essentials solutions to deploy."
+            },
+            "defaultValue": []
+        },
+        "enableSolutionsTraining": {
+            "type": "array",
+            "metadata": {
+                "description": "The list of Content Hub training solutions to deploy."
+            },
+            "defaultValue": []
+        },
         "aadStreams": {
             "type": "array",
             "metadata": {
@@ -235,7 +249,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/solutionsAndAlerts.json', parameters('_artifactsLocationSasToken'))]",
+                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/dataConnectors.json', parameters('_artifactsLocationSasToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
