@@ -305,108 +305,6 @@
                           "required": false
                       },
                       "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'AzureActiveDirectory'),true,false)]"
-                  },
-                  {
-                    "name": "xdrStreams",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Select Microsoft Defender XDR raw logging options to enable",
-                    "multiselect": true,
-                    "defaultValue": [{"value": "alerts"}, {"value": "alertInfo"}, {"value": "alertEvidence"}],
-                    "toolTip": "Select Microsoft Defender XDR raw logging options you would like to stream to the workspace",
-                    "constraints": {
-                        "allowedValues": [
-                            {
-                                "label": "Alerts",
-                                "value": "alerts"
-                            },
-                            {
-                                "label": "Alert Info",
-                                "value": "alertInfo"
-                            },
-                            {
-                                "label": "Alert Evidence",
-                                "value": "alertEvidence"
-                            },
-                            {
-                                "label": "Device Events",
-                                "value": "deviceEvents"
-                            },
-                            {
-                                "label": "Device Info",
-                                "value": "deviceInfo"
-                            },
-                            {
-                                "label": "Device Network Info",
-                                "value": "deviceNetworkInfo"
-                            },
-                            {
-                                "label": "Device Process Events",
-                                "value": "deviceProcessEvents"
-                            },
-                            {
-                                "label": "Device Network Events",
-                                "value": "deviceNetworkEvents"
-                            },
-                            {
-                                "label": "Device File Events",
-                                "value": "deviceFileEvents"
-                            },
-                            {
-                                "label": "Device Registry Events",
-                                "value": "deviceRegistryEvents"
-                            },
-                            {
-                                "label": "Device Logon Events",
-                                "value": "deviceLogonEvents"
-                            },
-                            {
-                                "label": "Device Image Load Events",
-                                "value": "deviceImageLoadEvents"
-                            },
-                            {
-                                "label": "Device File Certificate Info",
-                                "value": "deviceFileCertificateInfo"
-                            },
-                            {
-                                "label": "Email Events",
-                                "value": "emailEvents"
-                            },
-                            {
-                                "label": "Email URL Info",
-                                "value": "emailUrlInfo"
-                            },
-                            {
-                                "label": "Email Attachment Info",
-                                "value": "emailAttachmentInfo"
-                            },
-                            {
-                                "label": "Email Post Delivery Events",
-                                "value": "emailPostDeliveryEvents"
-                            },
-                            {
-                                "label": "URL Click Events",
-                                "value": "urlClickEvents"
-                            },
-                            {
-                                "label": "Identity Directory Events",
-                                "value": "identityDirectoryEvents"
-                            },
-                            {
-                                "label": "Identity Logon Events",
-                                "value": "identityLogonEvents"
-                            },
-                            {
-                                "label": "Identity Query Events",
-                                "value": "identityQueryEvents"
-                            },
-                            {
-                                "label": "Cloud App Events",
-                                "value": "cloudAppEvents"
-                            }
-                        ],
-                        "required": false
-                    },
-                    "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'Microsoft365XDR'),true,false)]"
                   }
               ]
           }
@@ -420,7 +318,6 @@
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
-            "xdrStreams": "[steps('dataConnectors').xdrStreams]",
             "location": "[location()]",
             "rgName": "[basics('rgName')]"
         }
