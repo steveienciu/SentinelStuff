@@ -215,11 +215,6 @@
                                 "value": "AzureActiveDirectoryIDP"
                             },
                             {
-                                "label": "Azure Activity",
-                                "description": "This will only bring logs from the subscription selected in Basics tab. Relevant permissions at the subscription level are required.",
-                                "value": "AzureActivity"
-                            },
-                            {
                                 "label": "Microsoft 365 XDR",
                                 "description": "This will only enable incident and alert synchronization, no advanced hunting data will be enabled. Relevant license and Global Admin or Security Admin permission required",
                                 "value": "Microsoft365XDR"
