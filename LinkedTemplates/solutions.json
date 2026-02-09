@@ -120,7 +120,7 @@
             "condition": "[contains(parameters('enableSolutions1P'), 'ThreatIntelligence')]",
             "name": "ThreatIntelligence",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
+            "apiVersion": "2024-04-01-preview",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
