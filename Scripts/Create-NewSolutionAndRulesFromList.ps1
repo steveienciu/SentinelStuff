@@ -34,12 +34,22 @@ $alertUri = "$baseUri/providers/Microsoft.SecurityInsights/alertRules/"
 $url = $baseUri + "/providers/Microsoft.SecurityInsights/contentProductPackages?api-version=2023-04-01-preview"
 $allSolutions = (Invoke-RestMethod -Method "Get" -Uri $url -Headers $authHeader ).value
 
-#Deploy each single solution
-#$templateParameter = @{"workspace-location" = $Region; workspace = $Workspace }
-foreach ($deploySolution in $Solutions) {
-    $singleSolution = $allSolutions | Where-Object { $_.properties.displayName -Contains $deploySolution }
+# Normalize Solutions to an array (ARM may pass comma-separated string)
+$solutionsToDeploy = @()
+if ($null -ne $Solutions -and $Solutions.Count -gt 0) {
+    if ($Solutions.Count -eq 1 -and $Solutions[0] -match ',') {
+        $solutionsToDeploy = $Solutions[0] -split ',' | ForEach-Object { $_.Trim().Trim('"') } | Where-Object { $_ }
+    } else {
+        $solutionsToDeploy = $Solutions | ForEach-Object { $_.Trim().Trim('"') } | Where-Object { $_ }
+    }
+}
+
+# Deploy each single solution (match by displayName: substring, case-insensitive so "Threat Intelligence" matches "Threat Intelligence - TAXII" etc.)
+foreach ($deploySolution in $solutionsToDeploy) {
+    $name = $deploySolution.Trim()
+    $singleSolution = $allSolutions | Where-Object { $_.properties.displayName -ilike "*$name*" } | Select-Object -First 1
     if ($null -eq $singleSolution) {
-        Write-Error "Unable to get find solution with name $deploySolution" 
+        Write-Error "Unable to find solution with name '$name' in Content Hub. Check that the display name matches a solution in Content management > Content hub."
     }
     else {
         $solutionURL = $baseUri + "/providers/Microsoft.SecurityInsights/contentProductPackages/$($singleSolution.name)?api-version=2023-04-01-preview"
@@ -68,11 +78,11 @@ foreach ($deploySolution in $Solutions) {
         }
         $installURL = "https://management.azure.com/subscriptions/$($SubscriptionId)/resourcegroups/$($ResourceGroup)/providers/Microsoft.Resources/deployments/" + $deploymentName + "?api-version=2021-04-01"
         #$templateUri = $singleSolution.plans.artifacts | Where-Object -Property "name" -EQ "DefaultTemplate"
-        Write-Host "Deploying solution:  $deploySolution"
+        Write-Host "Deploying solution:  $name"
         
         try{
             Invoke-RestMethod -Uri $installURL -Method Put -Headers $authHeader -Body ($installBody | ConvertTo-Json -EnumsAsStrings -Depth 50 -EscapeHandling EscapeNonAscii)
-        Write-Host "Deployed solution:  $deploySolution"
+        Write-Host "Deployed solution:  $name"
         }
         catch {
             $errorReturn = $_
