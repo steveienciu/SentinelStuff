@@ -79,6 +79,13 @@
         "enableDiagnostics": {
             "type": "bool"
         },
+        "deployLighthouse": {
+            "type": "bool",
+            "metadata": {
+                "description": "When true, deploys Azure Lighthouse to onboard the resource group for managed service provider access."
+            },
+            "defaultValue": false
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -91,8 +98,9 @@
     },
     "resources": [
         {
+            "condition": "[parameters('deployLighthouse')]",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2022-09-01", 
+            "apiVersion": "2022-09-01",
             "name": "lighthouseDeployment",
             "location": "[parameters('location')]",
             "dependsOn": [
