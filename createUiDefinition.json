@@ -167,8 +167,8 @@
                                   "value": "Microsoft Defender XDR"
                               },
                               {
-                                  "label": "Threat Intelligence (NEW)",
-                                  "description": "Ingest threat indicators into Microsoft Sentinel. Threat indicators can be IP addresses, domains, URLs and file hashes and can be used to correlate across log sources for known indicators of compromise and/or indicators of active attack",
+                                  "label": "Threat Intelligence",
+                                  "description": "The Threat Intelligence solution includes 6 data connectors for STIX/TAXII and other sources, parsers, workbooks, 51 analytic rules, and hunting queries. Uses the ThreatIntelIndicators and ThreatIntelObjects tables for STIX objects (Threat Actor, Attack Pattern, Identity, Relationship). Install from Content Hub only; connectors are configured after deployment.",
                                   "value": "Threat Intelligence"
                               }
                           ],
@@ -213,11 +213,6 @@
                                 "label": "Office 365",
                                 "description": "Relevant license and Global Admin or Security Admin permission required",
                                 "value": "Office365"
-                            },
-                            {
-                                "label": "Threat Intelligence (NEW)",
-                                "description": "Global Admin or Security Admin permission required",
-                                "value": "ThreatIntelligence"
                             }
                           ],
                           "required": true
