@@ -82,7 +82,10 @@ foreach ($deploySolution in $solutionsToDeploy) {
         
         try{
             Invoke-RestMethod -Uri $installURL -Method Put -Headers $authHeader -Body ($installBody | ConvertTo-Json -EnumsAsStrings -Depth 50 -EscapeHandling EscapeNonAscii)
-        Write-Host "Deployed solution:  $name"
+            Write-Host "Deployed solution:  $name"
+            if ($name -ilike '*Threat Intelligence*') {
+                Write-Host "NOTE: After the Threat Intelligence solution is installed, enable the data connectors (e.g. Microsoft Defender Threat Intelligence, Threat Intelligence - TAXII) in Microsoft Sentinel > Configuration > Data connectors > Open connector page > Connect."
+            }
         }
         catch {
             $errorReturn = $_
