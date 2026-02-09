@@ -112,6 +112,17 @@
                           "validationMessage": "Please select"
                       },
                       "visible": true
+                  },
+                  {
+                      "name": "deployLighthouse",
+                      "type": "Microsoft.Common.CheckBox",
+                      "label": "Deploy Azure Lighthouse?",
+                      "toolTip": "When checked, resource group will be onboarded to Azure Lighthouse so the managed service provider can manage your Sentinel environment. Leave unchecked to skip Lighthouse deployment.",
+                      "constraints": {
+                          "required": false,
+                          "validationMessage": "Please choose"
+                      },
+                      "visible": true
                   }
               ]
           },
@@ -295,6 +306,7 @@
             "enableUeba": "[steps('settings').enableUeba]",
             "identityProviders": "[steps('settings').identityProviders]",
             "enableDiagnostics": "[steps('settings').enableDiagnostics]",
+            "deployLighthouse": "[steps('settings').deployLighthouse]",
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
