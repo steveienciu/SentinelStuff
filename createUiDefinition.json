@@ -210,6 +210,17 @@
                           "required": true
                       },
                       "visible": "[steps('settings').enablePartnerLink]"
+                  },
+                  {
+                      "name": "enablePlaybookIdentity",
+                      "type": "Microsoft.Common.CheckBox",
+                      "label": "Create playbook managed identity (bv-mi-playbook)?",
+                      "toolTip": "Creates a user-assigned managed identity named bv-mi-playbook in this resource group with Log Analytics Reader role on the workspace. Use this identity for Logic App playbooks that need to query Log Analytics.",
+                      "constraints": {
+                          "required": false,
+                          "validationMessage": "Please choose"
+                      },
+                      "visible": true
                   }
               ]
           },
@@ -396,6 +407,7 @@
             "deployLighthouse": "[steps('settings').deployLighthouse]",
             "enablePartnerLink": "[steps('settings').enablePartnerLink]",
             "partnerMpnId": "[steps('settings').partnerGeo]",
+            "enablePlaybookIdentity": "[steps('settings').enablePlaybookIdentity]",
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
