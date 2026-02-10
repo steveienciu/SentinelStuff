@@ -295,7 +295,7 @@
             ],
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[reference('partnerLinkIdentity').outputs.principalId]",
+                "principalId": "[reference('partnerLinkIdentity').outputs.principalId.value]",
                 "principalType": "ServicePrincipal"
             }
         },
@@ -325,7 +325,7 @@
                         "value": "[parameters('partnerMpnId')]"
                     },
                     "identityName": {
-                        "value": "[reference('partnerLinkIdentity').outputs.identityName]"
+                        "value": "[reference('partnerLinkIdentity').outputs.identityName.value]"
                     }
                 }
             }
