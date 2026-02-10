@@ -26,6 +26,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2020-10-01",
+            "kind": "AzurePowerShell",
             "name": "linkPartnerId",
             "location": "[parameters('location')]",
             "identity": {
