@@ -290,7 +290,6 @@
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2022-04-01",
             "name": "[variables('partnerLinkRoleAssignmentGuid')]",
-            "scope": "[subscription().id]",
             "dependsOn": [
                 "partnerLinkIdentity"
             ],
