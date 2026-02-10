@@ -123,6 +123,37 @@
                           "validationMessage": "Please choose"
                       },
                       "visible": true
+                  },
+                  {
+                      "name": "enablePartnerLink",
+                      "type": "Microsoft.Common.CheckBox",
+                      "label": "Link Partner ID (PAL) to this subscription?",
+                      "toolTip": "Associates your partner organization's MPN ID with this subscription for Partner Admin Link (PAL). Requires Contributor on the subscription. [Learn more](https://learn.microsoft.com/azure/cost-management-billing/manage/link-partner-id)",
+                      "constraints": {
+                          "required": false,
+                          "validationMessage": "Please choose"
+                      },
+                      "visible": true
+                  },
+                  {
+                      "name": "partnerGeo",
+                      "type": "Microsoft.Common.DropDown",
+                      "label": "Partner geo / region",
+                      "toolTip": "Select the region for the partner MPN ID to link.",
+                      "constraints": {
+                          "allowedValues": [
+                              {
+                                  "label": "United States",
+                                  "value": "6125666"
+                              },
+                              {
+                                  "label": "Canada",
+                                  "value": "54484777"
+                              }
+                          ],
+                          "required": true
+                      },
+                      "visible": "[steps('settings').enablePartnerLink]"
                   }
               ]
           },
@@ -307,6 +338,8 @@
             "identityProviders": "[steps('settings').identityProviders]",
             "enableDiagnostics": "[steps('settings').enableDiagnostics]",
             "deployLighthouse": "[steps('settings').deployLighthouse]",
+            "enablePartnerLink": "[steps('settings').enablePartnerLink]",
+            "partnerMpnId": "[steps('settings').partnerGeo]",
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
