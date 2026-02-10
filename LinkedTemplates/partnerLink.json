@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgName": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "partnerMpnId": {
+            "type": "string",
+            "metadata": {
+                "description": "Partner MPN ID to link (e.g. 6125666 for US, 54484777 for Canada)"
+            }
+        },
+        "identityName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the user-assigned managed identity to use for the link"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "linkPartnerId",
+            "location": "[parameters('location')]",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]": {}
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "8.0",
+                "scriptContent": "$ErrorActionPreference = 'Stop'\nInstall-Module -Name Az.ManagementPartner -Scope CurrentUser -Force -AllowClobber\nConnect-AzAccount -Identity\nNew-AzManagementPartner -PartnerId $env:PARTNER_MPN_ID\nWrite-Output 'Partner ID linked successfully.'",
+                "environmentVariables": [
+                    {
+                        "name": "PARTNER_MPN_ID",
+                        "value": "[parameters('partnerMpnId')]"
+                    }
+                ],
+                "timeout": "PT10M",
+                "cleanupPreference": "Always",
+                "retentionInterval": "P1D"
+            }
+        }
+    ],
+    "outputs": {}
+}
