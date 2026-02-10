@@ -14,7 +14,7 @@
     },
     "variables": {
         "identityName": "bv-mi-playbook",
-        "logAnalyticsReaderRoleId": "73c42c96-874c-492b-b640-5c51ad78f059",
+        "logAnalyticsReaderRoleId": "73c42c96-874c-492b-b04d-ab87d138a893",
         "workspaceScope": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
         "roleAssignmentGuid": "[guid(variables('workspaceScope'), variables('identityName'), variables('logAnalyticsReaderRoleId'))]"
     },
