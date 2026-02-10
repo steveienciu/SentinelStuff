@@ -1,0 +1,40 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Log Analytics workspace to enable diagnostic settings on."
+            }
+        }
+    },
+    "variables": {
+        "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "apiVersion": "2021-05-01-preview",
+            "scope": "[variables('workspaceResourceId')]",
+            "name": "WorkspaceDiagnostics",
+            "properties": {
+                "workspaceId": "[variables('workspaceResourceId')]",
+                "logs": [
+                    {
+                        "category": "Audit",
+                        "enabled": true
+                    },
+                    {
+                        "category": "Jobs",
+                        "enabled": true
+                    },
+                    {
+                        "category": "SummaryLogs",
+                        "enabled": true
+                    }
+                ]
+            }
+        }
+    ]
+}
