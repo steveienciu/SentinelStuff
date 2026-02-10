@@ -149,6 +149,62 @@
                               {
                                   "label": "Canada",
                                   "value": "54484777"
+                              },
+                              {
+                                  "label": "All LATAM except Colombia",
+                                  "value": "6125666"
+                              },
+                              {
+                                  "label": "Colombia",
+                                  "value": "6992023"
+                              },
+                              {
+                                  "label": "Australia",
+                                  "value": "6772171"
+                              },
+                              {
+                                  "label": "Belgium",
+                                  "value": "6492623"
+                              },
+                              {
+                                  "label": "Denmark",
+                                  "value": "6636462"
+                              },
+                              {
+                                  "label": "France",
+                                  "value": "6578585"
+                              },
+                              {
+                                  "label": "Germany",
+                                  "value": "6519439"
+                              },
+                              {
+                                  "label": "Hungary",
+                                  "value": "6462631"
+                              },
+                              {
+                                  "label": "Netherlands",
+                                  "value": "6496378"
+                              },
+                              {
+                                  "label": "Philippines",
+                                  "value": "6296039"
+                              },
+                              {
+                                  "label": "Singapore",
+                                  "value": "6591555"
+                              },
+                              {
+                                  "label": "Spain",
+                                  "value": "6248729"
+                              },
+                              {
+                                  "label": "Switzerland",
+                                  "value": "6823721"
+                              },
+                              {
+                                  "label": "United Kingdom",
+                                  "value": "6462628"
                               }
                           ],
                           "required": true
