@@ -103,6 +103,13 @@
             },
             "defaultValue": ""
         },
+        "enablePlaybookIdentity": {
+            "type": "bool",
+            "metadata": {
+                "description": "When true, creates a user-assigned managed identity named bv-mi-playbook in the resource group with Log Analytics Reader role on the workspace."
+            },
+            "defaultValue": false
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -259,6 +266,31 @@
                 "parameters": {
                     "workspaceName": {
                         "value": "[parameters('workspaceName')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[parameters('enablePlaybookIdentity')]",
+            "name": "playbookIdentity",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2023-07-01",
+            "dependsOn": [
+                "workspaceCreation"
+            ],
+            "resourceGroup": "[parameters('rgName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/playbookIdentity.json', parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "workspaceName": {
+                        "value": "[parameters('workspaceName')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
                     }
                 }
             }
