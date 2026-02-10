@@ -224,6 +224,28 @@
             }
         },
         {
+            "condition": "[parameters('enableDiagnostics')]",
+            "type": "Microsoft.Resources/deployments",
+            "name": "workspaceDiagnostics",
+            "apiVersion": "2023-07-01",
+            "dependsOn": [
+                "workspaceCreation"
+            ],
+            "resourceGroup": "[parameters('rgName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/workspaceDiagnostics.json', parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "workspaceName": {
+                        "value": "[parameters('workspaceName')]"
+                    }
+                }
+            }
+        },
+        {
             "condition": "[not(empty(parameters('enableDataConnectors')))]",
             "name": "enableDataConnectors",
             "type": "Microsoft.Resources/deployments",
