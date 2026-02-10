@@ -105,8 +105,8 @@
                   {
                       "name": "enableDiagnostics",
                       "type": "Microsoft.Common.CheckBox",
-                      "label": "Enable Sentinel health diagnostics?",
-                      "toolTip": "This will enable diagnostics settings for Analytics rules, Data Connectors and Automation rules. [Learn more](https://learn.microsoft.com/azure/sentinel/health-audit)",
+                      "label": "Enable Sentinel health and Log Analytics workspace diagnostics?",
+                      "toolTip": "Enables both Sentinel health diagnostic settings (Analytics, Data Connectors, Automation) and Log Analytics workspace diagnostic settings (Audit, Jobs, SummaryLogs). [Learn more](https://learn.microsoft.com/azure/sentinel/health-audit)",
                       "constraints": {
                           "required": false,
                           "validationMessage": "Please select"
