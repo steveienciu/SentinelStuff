@@ -77,7 +77,10 @@
             "defaultValue": []
         },
         "enableDiagnostics": {
-            "type": "bool"
+            "type": "bool",
+            "metadata": {
+                "description": "When true, enables both Sentinel health diagnostic settings (Automation, DataConnectors, Analytics) and Log Analytics workspace diagnostic settings (Audit, Jobs, SummaryLogs)."
+            }
         },
         "deployLighthouse": {
             "type": "bool",
