@@ -125,39 +125,6 @@
                       "visible": true
                   },
                   {
-                      "name": "infoBoxResourceProviders",
-                      "type": "Microsoft.Common.InfoBox",
-                      "visible": true,
-                      "options": {
-                          "icon": "Info",
-                          "text": "Optionally register Azure resource providers before deployment. Check the boxes below to have the template register and wait for the required providers (Logic Apps, Azure Arc, or Function Apps). Requires subscription-level permissions."
-                      }
-                  },
-                  {
-                      "name": "registerProvidersLogicApps",
-                      "type": "Microsoft.Common.CheckBox",
-                      "label": "Register resource providers for Logic Apps?",
-                      "toolTip": "Registers Microsoft.Logic and Microsoft.Web so Logic App (playbook) resources can be created in this subscription.",
-                      "constraints": { "required": false },
-                      "visible": true
-                  },
-                  {
-                      "name": "registerProvidersAzureArc",
-                      "type": "Microsoft.Common.CheckBox",
-                      "label": "Register resource providers for Azure Arc?",
-                      "toolTip": "Registers providers needed for Azure Arc (HybridCompute, GuestConfiguration, AzureArcData, KubernetesConfiguration, etc.).",
-                      "constraints": { "required": false },
-                      "visible": true
-                  },
-                  {
-                      "name": "registerProvidersFunctionApps",
-                      "type": "Microsoft.Common.CheckBox",
-                      "label": "Register resource providers for Function Apps?",
-                      "toolTip": "Registers Microsoft.Web, Microsoft.Storage, and Microsoft.Insights for Azure Functions.",
-                      "constraints": { "required": false },
-                      "visible": true
-                  },
-                  {
                       "name": "enablePlaybookIdentity",
                       "type": "Microsoft.Common.CheckBox",
                       "label": "Create playbook managed identity (bv-mi-playbook)?",
@@ -351,9 +318,6 @@
             "identityProviders": "[steps('settings').identityProviders]",
             "enableDiagnostics": "[steps('settings').enableDiagnostics]",
             "deployLighthouse": "[steps('settings').deployLighthouse]",
-            "registerProvidersLogicApps": "[steps('settings').registerProvidersLogicApps]",
-            "registerProvidersAzureArc": "[steps('settings').registerProvidersAzureArc]",
-            "registerProvidersFunctionApps": "[steps('settings').registerProvidersFunctionApps]",
             "enablePlaybookIdentity": "[steps('settings').enablePlaybookIdentity]",
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
