@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": { "type": "string" },
+        "registerLogicApps": { "type": "bool", "defaultValue": false },
+        "registerAzureArc": { "type": "bool", "defaultValue": false },
+        "registerFunctionApps": { "type": "bool", "defaultValue": false },
+        "identityResourceId": { "type": "string", "defaultValue": "" }
+    },
+    "variables": {
+        "identityName": "bv-mi-register-providers",
+        "scriptContent": "param([string]$RegisterLogicApps,[string]$RegisterAzureArc,[string]$RegisterFunctionApps)\n$ErrorActionPreference = 'Stop'\nConnect-AzAccount -Identity | Out-Null\nStart-Sleep -Seconds 20\n$toRegister = @()\nif ($RegisterLogicApps -eq 'true') { $toRegister += 'Microsoft.Logic','Microsoft.Web' }\nif ($RegisterAzureArc -eq 'true') { $toRegister += 'Microsoft.HybridCompute','Microsoft.GuestConfiguration','Microsoft.AzureArcData','Microsoft.KubernetesConfiguration','Microsoft.ExtendedLocation' }\nif ($RegisterFunctionApps -eq 'true') { $toRegister += 'Microsoft.Web','Microsoft.Storage','Microsoft.Insights' }\n$toRegister = $toRegister | Select-Object -Unique\nif ($toRegister.Count -eq 0) { Write-Output 'No providers to register.'; exit 0 }\nforeach ($ns in $toRegister) {\n  Write-Output \"Registering $ns...\"\n  Register-AzResourceProvider -ProviderNamespace $ns -ErrorAction SilentlyContinue | Out-Null\n}\nWrite-Output 'Waiting for all providers to reach Registered state...'\n$maxWait = 300\n$waited = 0\nforeach ($ns in $toRegister) {\n  $waited = 0\n  while ($waited -lt $maxWait) {\n    $state = (Get-AzResourceProvider -ProviderNamespace $ns).RegistrationState\n    if ($state -eq 'Registered') { Write-Output \"  $ns : Registered\"; break }\n    Write-Output \"  $ns : $state, waiting...\"\n    Start-Sleep -Seconds 15\n    $waited += 15\n  }\n  if ((Get-AzResourceProvider -ProviderNamespace $ns).RegistrationState -ne 'Registered') { throw \"Provider $ns did not register in time.\" }\n}\nWrite-Output 'All selected providers are Registered.'"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "registerProviders",
+            "location": "[parameters('location')]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('identityResourceId')]": {}
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "8.0",
+                "scriptContent": "[variables('scriptContent')]",
+                "environmentVariables": [
+                    { "name": "RegisterLogicApps", "value": "[string(parameters('registerLogicApps'))]" },
+                    { "name": "RegisterAzureArc", "value": "[string(parameters('registerAzureArc'))]" },
+                    { "name": "RegisterFunctionApps", "value": "[string(parameters('registerFunctionApps'))]" }
+                ],
+                "timeout": "PT30M",
+                "cleanupPreference": "Always",
+                "retentionInterval": "P1D"
+            }
+        }
+    ],
+    "outputs": {}
+}
