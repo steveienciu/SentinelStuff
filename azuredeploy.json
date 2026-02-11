@@ -96,27 +96,6 @@
             },
             "defaultValue": false
         },
-        "registerProvidersLogicApps": {
-            "type": "bool",
-            "metadata": {
-                "description": "When true, registers Microsoft.Logic and Microsoft.Web before deployment (for Logic Apps/playbooks)."
-            },
-            "defaultValue": false
-        },
-        "registerProvidersAzureArc": {
-            "type": "bool",
-            "metadata": {
-                "description": "When true, registers Azure Arc–related resource providers before deployment."
-            },
-            "defaultValue": false
-        },
-        "registerProvidersFunctionApps": {
-            "type": "bool",
-            "metadata": {
-                "description": "When true, registers Microsoft.Web, Microsoft.Storage, and Microsoft.Insights before deployment (for Function Apps)."
-            },
-            "defaultValue": false
-        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -125,11 +104,7 @@
             "defaultValue": "https://raw.githubusercontent.com/steveienciu/SentinelStuff/main/"
         }
     },
-    "variables": {
-        "anyRegisterProviders": "[or(parameters('registerProvidersLogicApps'), parameters('registerProvidersAzureArc'), parameters('registerProvidersFunctionApps'))]",
-        "resourcePolicyContributorRoleId": "36243c78-bf99-498c-9df9-86d9f8d28608",
-        "registerProvidersRoleAssignmentGuid": "[guid(subscription().subscriptionId, 'bv-mi-register-providers', variables('resourcePolicyContributorRoleId'))]"
-    },
+    "variables": {},
     "resources": [
         {
             "condition": "[parameters('deployLighthouse')]",
@@ -198,127 +173,11 @@
             "properties": {}
         },
         {
-            "condition": "[variables('anyRegisterProviders')]",
-            "name": "registerProvidersIdentity",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2023-07-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups', parameters('rgName'))]"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/registerProvidersIdentity.json', parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "location": { "value": "[parameters('location')]" }
-                }
-            }
-        },
-        {
-            "condition": "[variables('anyRegisterProviders')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2022-04-01",
-            "name": "[variables('registerProvidersRoleAssignmentGuid')]",
-            "scope": "[subscription().id]",
-            "dependsOn": [
-                "registerProvidersIdentity"
-            ],
-            "properties": {
-                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', variables('resourcePolicyContributorRoleId'))]",
-                "principalId": "[reference('registerProvidersIdentity').outputs.principalId.value]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "condition": "[variables('anyRegisterProviders')]",
-            "name": "registerProvidersScript",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2023-07-01",
-            "dependsOn": [
-                "[variables('registerProvidersRoleAssignmentGuid')]"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/registerProvidersScript.json', parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "location": { "value": "[parameters('location')]" },
-                    "registerLogicApps": { "value": "[parameters('registerProvidersLogicApps')]" },
-                    "registerAzureArc": { "value": "[parameters('registerProvidersAzureArc')]" },
-                    "registerFunctionApps": { "value": "[parameters('registerProvidersFunctionApps')]" },
-                    "identityResourceId": { "value": "[reference('registerProvidersIdentity').outputs.identityResourceId.value]" }
-                }
-            }
-        },
-        {
-            "condition": "[not(variables('anyRegisterProviders'))]",
-            "name": "registerProvidersNoOp",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2023-07-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups', parameters('rgName'))]"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/registerProvidersNoOp.json', parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "location": { "value": "[parameters('location')]" }
-                }
-            }
-        },
-        {
-            "condition": "[not(variables('anyRegisterProviders'))]",
-            "name": "firstDeploymentNoReg",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2023-07-01",
-            "dependsOn": [
-                "registerProvidersNoOp"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "resources": []
-                }
-            }
-        },
-        {
-            "condition": "[variables('anyRegisterProviders')]",
-            "name": "firstDeploymentWithReg",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2023-07-01",
-            "dependsOn": [
-                "registerProvidersScript"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "resources": []
-                }
-            }
-        },
-        {
             "name": "workspaceCreation",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2023-07-01",
             "dependsOn": [
-                "firstDeploymentNoReg",
-                "firstDeploymentWithReg"
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('rgName'))]"
             ],
             "resourceGroup": "[parameters('rgName')]",
             "properties": {
