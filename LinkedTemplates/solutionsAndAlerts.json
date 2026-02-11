@@ -101,7 +101,7 @@
             "identity": {
                 "type": "userAssigned",
                 "userAssignedIdentities": {
-                    "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {}
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
                 }
             },
             "properties": {
@@ -111,6 +111,34 @@
                 "primaryScriptUri": "https://raw.githubusercontent.com/steveienciu/SentinelStuff/main/Scripts/Create-NewSolutionAndRulesFromList.ps1",
                 "supportingScriptUris": [],
                 "timeout": "PT30M",
+                "cleanupPreference": "Always",
+                "retentionInterval": "P1D"
+            }
+        },
+        {
+            "dependsOn": ["[concat('Microsoft.Resources/deploymentScripts/', 'deployRules')]"],
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "cleanup",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
+                }
+            },
+            "properties": {
+                "forceUpdateTag": "1",
+                "azPowerShellVersion": "8.0",
+                "scriptContent": "$ErrorActionPreference = 'Stop'\nConnect-AzAccount -Identity | Out-Null\n$subId = (Get-AzContext).Subscription.Id\n$rg = $env:RG_NAME\n$identityName = $env:IDENTITY_NAME\n$roleGuid = $env:ROLE_GUID\n$rgScope = \"/subscriptions/$subId/resourceGroups/$rg\"\n$roleAssignmentId = \"$rgScope/providers/Microsoft.Authorization/roleAssignments/$roleGuid\"\n$miId = \"$rgScope/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$identityName\"\nRemove-AzResource -ResourceId $roleAssignmentId -Force -ErrorAction SilentlyContinue\nStart-Sleep -Seconds 15\nRemove-AzResource -ResourceId $miId -Force\nWrite-Output 'Cleanup done: role assignment and managed identity removed.'",
+                "supportingScriptUris": [],
+                "environmentVariables": [
+                    { "name": "RG_NAME", "value": "[resourceGroup().name]" },
+                    { "name": "IDENTITY_NAME", "value": "[variables('identityName')]" },
+                    { "name": "ROLE_GUID", "value": "[parameters('roleGuid')]" }
+                ],
+                "timeout": "PT10M",
                 "cleanupPreference": "Always",
                 "retentionInterval": "P1D"
             }
