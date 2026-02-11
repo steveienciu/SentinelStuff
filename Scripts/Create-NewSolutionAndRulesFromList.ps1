@@ -30,9 +30,20 @@ $SubscriptionId = $context.Subscription.Id
 $baseUri = "https://management.azure.com/subscriptions/${SubscriptionId}/resourceGroups/${ResourceGroup}/providers/Microsoft.OperationalInsights/workspaces/${Workspace}"
 $alertUri = "$baseUri/providers/Microsoft.SecurityInsights/alertRules/"
 
-# Get a list of all the solutions
-$url = $baseUri + "/providers/Microsoft.SecurityInsights/contentProductPackages?api-version=2023-04-01-preview"
-$allSolutions = (Invoke-RestMethod -Method "Get" -Uri $url -Headers $authHeader ).value
+# Get a list of all the solutions (use supported api-version; 2023-04-01-preview can return 400)
+$contentPackagesApiVersion = "2024-01-01-preview"
+$url = $baseUri + "/providers/Microsoft.SecurityInsights/contentProductPackages?api-version=$contentPackagesApiVersion"
+try {
+    $response = Invoke-RestMethod -Method "Get" -Uri $url -Headers $authHeader
+    $allSolutions = $response.value
+} catch {
+    $statusCode = $_.Exception.Response.StatusCode.value__
+    $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+    $reader.BaseStream.Position = 0
+    $responseBody = $reader.ReadToEnd()
+    Write-Error "contentProductPackages GET failed ($statusCode). Response: $responseBody"
+    throw
+}
 
 #Deploy each single solution
 #$templateParameter = @{"workspace-location" = $Region; workspace = $Workspace }
@@ -42,7 +53,7 @@ foreach ($deploySolution in $Solutions) {
         Write-Error "Unable to get find solution with name $deploySolution" 
     }
     else {
-        $solutionURL = $baseUri + "/providers/Microsoft.SecurityInsights/contentProductPackages/$($singleSolution.name)?api-version=2023-04-01-preview"
+        $solutionURL = $baseUri + "/providers/Microsoft.SecurityInsights/contentProductPackages/$($singleSolution.name)?api-version=$contentPackagesApiVersion"
         $solution = (Invoke-RestMethod -Method "Get" -Uri $solutionURL -Headers $authHeader )
         Write-Host "Solution name: " $solution.name
         $packagedContent = $solution.properties.packagedContent
@@ -94,7 +105,7 @@ if (($SeveritiesToInclude -eq "None") -or ($null -eq $SeveritiesToInclude)) {
 Start-Sleep -Seconds 60
 
 #URL to get all the needed Analytic Rule templates
-$solutionURL = $baseUri + "/providers/Microsoft.SecurityInsights/contentTemplates?api-version=2023-05-01-preview"
+$solutionURL = $baseUri + "/providers/Microsoft.SecurityInsights/contentTemplates?api-version=$contentPackagesApiVersion"
 #Add a filter only return analytic rule templates
 $solutionURL += "&%24filter=(properties%2FcontentKind%20eq%20'AnalyticsRule')"
 
