@@ -89,20 +89,6 @@
             },
             "defaultValue": false
         },
-        "enablePartnerLink": {
-            "type": "bool",
-            "metadata": {
-                "description": "When true, links the partner MPN ID to this subscription (Partner Admin Link / PAL). Requires Contributor on the subscription. A dedicated managed identity is created to perform the link."
-            },
-            "defaultValue": false
-        },
-        "partnerMpnId": {
-            "type": "string",
-            "metadata": {
-                "description": "Partner MPN ID to link (e.g. 6125666 for United States, 54484777 for Canada). Used when enablePartnerLink is true."
-            },
-            "defaultValue": ""
-        },
         "enablePlaybookIdentity": {
             "type": "bool",
             "metadata": {
@@ -118,9 +104,7 @@
             "defaultValue": "https://raw.githubusercontent.com/steveienciu/SentinelStuff/main/"
         }
     },
-    "variables": {
-        "partnerLinkRoleAssignmentGuid": "[guid(concat(subscription().subscriptionId, parameters('rgName'), 'partnerlink-contributor'))]"
-    },
+    "variables": {},
     "resources": [
         {
             "condition": "[parameters('deployLighthouse')]",
@@ -291,73 +275,6 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[and(parameters('enablePartnerLink'), not(empty(parameters('partnerMpnId'))))]",
-            "name": "partnerLinkIdentity",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2023-07-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups', parameters('rgName'))]"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/partnerLinkIdentity.json', parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "location": {
-                        "value": "[parameters('location')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[and(parameters('enablePartnerLink'), not(empty(parameters('partnerMpnId'))))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2022-04-01",
-            "name": "[variables('partnerLinkRoleAssignmentGuid')]",
-            "dependsOn": [
-                "partnerLinkIdentity"
-            ],
-            "properties": {
-                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[reference('partnerLinkIdentity').outputs.principalId.value]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "condition": "[and(parameters('enablePartnerLink'), not(empty(parameters('partnerMpnId'))))]",
-            "name": "partnerLinkScript",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2023-07-01",
-            "dependsOn": [
-                "[variables('partnerLinkRoleAssignmentGuid')]"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/partnerLink.json', parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "rgName": {
-                        "value": "[parameters('rgName')]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
-                    },
-                    "partnerMpnId": {
-                        "value": "[parameters('partnerMpnId')]"
-                    },
-                    "identityName": {
-                        "value": "[reference('partnerLinkIdentity').outputs.identityName.value]"
                     }
                 }
             }
