@@ -96,6 +96,13 @@
             },
             "defaultValue": false
         },
+        "deployAsimParsers": {
+            "type": "bool",
+            "metadata": {
+                "description": "When true, deploys ASIM workspace parsers from the official Microsoft Sentinel GitHub repository."
+            },
+            "defaultValue": false
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -274,6 +281,31 @@
                         "value": "[parameters('workspaceName')]"
                     },
                     "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[parameters('deployAsimParsers')]",
+            "name": "deployAsimParsers",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2023-07-01",
+            "dependsOn": [
+                "workspaceCreation"
+            ],
+            "resourceGroup": "[parameters('rgName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/ASIM/ASimFullDeployment.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "Workspace": {
+                        "value": "[parameters('workspaceName')]"
+                    },
+                    "WorkspaceRegion": {
                         "value": "[parameters('location')]"
                     }
                 }
