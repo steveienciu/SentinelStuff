@@ -134,6 +134,17 @@
                           "validationMessage": "Please choose"
                       },
                       "visible": true
+                  },
+                  {
+                      "name": "deployAsimParsers",
+                      "type": "Microsoft.Common.CheckBox",
+                      "label": "Deploy ASIM (Advanced Security Information Model) workspace parsers?",
+                      "toolTip": "When checked, deploys workspace-deployed ASIM parsers from Microsoft's GitHub repo. These parsers normalize data for analytics and hunting. Leave unchecked to use built-in parsers only. [Learn more](https://aka.ms/DeployASIM)",
+                      "constraints": {
+                          "required": false,
+                          "validationMessage": "Please choose"
+                      },
+                      "visible": true
                   }
               ]
           },
@@ -319,6 +330,7 @@
             "enableDiagnostics": "[steps('settings').enableDiagnostics]",
             "deployLighthouse": "[steps('settings').deployLighthouse]",
             "enablePlaybookIdentity": "[steps('settings').enablePlaybookIdentity]",
+            "deployAsimParsers": "[steps('settings').deployAsimParsers]",
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
