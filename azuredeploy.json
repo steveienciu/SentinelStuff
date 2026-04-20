@@ -92,7 +92,7 @@
         "deployBlueVoyantRgRoleAssignments": {
             "type": "bool",
             "metadata": {
-                "description": "When true, deploys Azure RBAC role assignments on the resource group for BlueVoyant Entra groups (Contributor, Microsoft Sentinel Reader, and additional assignments). Use alongside Lighthouse when the partner requires both delegated access and explicit RG IAM."
+                "description": "When true, deploys Azure RBAC role assignments on the resource group for BlueVoyant Entra groups (Contributor, Microsoft Sentinel Reader, and additional assignments). Often used with Azure Lighthouse and separately configured GDAP (Granular Delegated Admin Privileges) for full partner onboarding; this parameter only controls Azure RG IAM, not GDAP."
             },
             "defaultValue": false
         },
