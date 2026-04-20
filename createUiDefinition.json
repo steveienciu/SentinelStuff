@@ -127,8 +127,8 @@
                   {
                       "name": "deployBlueVoyantRgRoleAssignments",
                       "type": "Microsoft.Common.CheckBox",
-                      "label": "Deploy BlueVoyant resource group role assignments (RBAC)?",
-                      "toolTip": "When checked, assigns Azure RBAC on this resource group to the BlueVoyant Entra groups (Contributor, Microsoft Sentinel Reader, and related roles) per partner template. This is separate from Lighthouse; enable both if your onboarding requires delegated access and explicit RG IAM.",
+                      "label": "Deploy BlueVoyant resource group role assignments (RBAC; often paired with Lighthouse / GDAP)?",
+                      "toolTip": "When checked, deploys Azure RBAC role assignments on this resource group per the BlueVoyant template (Contributor, Microsoft Sentinel Reader, and related roles). GDAP (Granular Delegated Admin Privileges) is set up separately in Microsoft partner / Entra admin relationships—not by this checkbox—but partners often use RG RBAC together with Lighthouse and GDAP for Sentinel and Defender portal access. Enable Lighthouse and this option only when your onboarding plan calls for both delegated Azure access and explicit RG IAM.",
                       "constraints": {
                           "required": false,
                           "validationMessage": "Please choose"
