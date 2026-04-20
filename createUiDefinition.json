@@ -125,6 +125,17 @@
                       "visible": true
                   },
                   {
+                      "name": "deployBlueVoyantRgRoleAssignments",
+                      "type": "Microsoft.Common.CheckBox",
+                      "label": "Deploy BlueVoyant resource group role assignments (RBAC)?",
+                      "toolTip": "When checked, assigns Azure RBAC on this resource group to the BlueVoyant Entra groups (Contributor, Microsoft Sentinel Reader, and related roles) per partner template. This is separate from Lighthouse; enable both if your onboarding requires delegated access and explicit RG IAM.",
+                      "constraints": {
+                          "required": false,
+                          "validationMessage": "Please choose"
+                      },
+                      "visible": true
+                  },
+                  {
                       "name": "enablePlaybookIdentity",
                       "type": "Microsoft.Common.CheckBox",
                       "label": "Create playbook managed identity (bv-mi-playbook)?",
@@ -329,6 +340,7 @@
             "identityProviders": "[steps('settings').identityProviders]",
             "enableDiagnostics": "[steps('settings').enableDiagnostics]",
             "deployLighthouse": "[steps('settings').deployLighthouse]",
+            "deployBlueVoyantRgRoleAssignments": "[steps('settings').deployBlueVoyantRgRoleAssignments]",
             "enablePlaybookIdentity": "[steps('settings').enablePlaybookIdentity]",
             "deployAsimParsers": "[steps('settings').deployAsimParsers]",
             "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
