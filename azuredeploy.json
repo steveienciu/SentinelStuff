@@ -89,6 +89,13 @@
             },
             "defaultValue": false
         },
+        "deployBlueVoyantRgRoleAssignments": {
+            "type": "bool",
+            "metadata": {
+                "description": "When true, deploys Azure RBAC role assignments on the resource group for BlueVoyant Entra groups (Contributor, Microsoft Sentinel Reader, and additional assignments). Use alongside Lighthouse when the partner requires both delegated access and explicit RG IAM."
+            },
+            "defaultValue": false
+        },
         "enablePlaybookIdentity": {
             "type": "bool",
             "metadata": {
@@ -178,6 +185,23 @@
             "name": "[parameters('rgName')]",
             "location": "[parameters('location')]",
             "properties": {}
+        },
+        {
+            "condition": "[parameters('deployBlueVoyantRgRoleAssignments')]",
+            "name": "blueVoyantRgRoleAssignments",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2023-07-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('rgName'))]"
+            ],
+            "resourceGroup": "[parameters('rgName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'), 'LinkedTemplates/bluevoyantRgRoleAssignments.json', parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
         },
         {
             "name": "workspaceCreation",
