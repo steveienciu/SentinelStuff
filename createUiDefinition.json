@@ -21,11 +21,11 @@
                 "type": "Microsoft.Common.TextBox",
                 "label": "Resource Group name",
 		"defaultValue": "",
-                "toolTip": "Enter a resource group name",
+                "toolTip": "Azure resource group name: 1–90 characters; letters, digits, and ._-() (cannot end with a period).",
                 "constraints": {
                     "required": true,
-                    "regex": "^[A-Za-z0-9][A-Za-z0-9-]+[A-Za-z0-9]$",
-                    "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                    "regex": "^(?=.{1,90}$)(?!.*\\.$)[A-Za-z0-9._()-]+$",
+                    "validationMessage": "Use 1–90 characters. Allowed: letters, digits, period, underscore, hyphen, parentheses. Name cannot end with a period (Azure naming rules)."
                 },
                 "visible": true  
             },
